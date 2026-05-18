@@ -1,30 +1,61 @@
-# React + TypeScript + Vite
+# AI 辅助投稿分析
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+本项目是一个基于 React + TypeScript + Vite 构建的智能投稿分析工具。它可以通过接入智谱 AI 接口，自动对从微信、小红书、抖音等平台收集的长文本投稿内容进行智能分析，生成结构化的评估报告，帮助用户快速了解事件核心并评估热度。
 
-Currently, two official plugins are available:
+测试网址：https://publish-helper.pworks.top/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ 核心功能
 
-## Expanding the ESLint configuration
+- **智能内容分析**：一键对长文本进行深度分析，自动生成包含事件分类、核心摘要、热度评分及评分理由的报告。
+- **自定义配置**：支持自定义事件标题（留空则由 AI 自动提取），并可在前端界面快捷配置智谱 API Key。
+- **多格式导出**：支持将分析生成的 Markdown 格式报告一键导出为 **TXT** 纯文本或 **Word (.docx)** 文档，方便后续存档与分享。
+- **流畅交互体验**：基于 DaisyUI 和 TailwindCSS 打造的现代化界面，提供清晰的加载状态提示和错误处理机制。
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🚀 工具使用方法
 
-- Configure the top-level `parserOptions` property like this:
+1. **配置 API Key（可选）**
+   - 点击页面右上角的“齿轮（设置）”图标。
+   - 在弹出的配置框中输入你的 **智谱 API Key**（若留空则将使用系统默认配置的 Key）。
+   - 点击“保存配置”。
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+2. **输入投稿内容**
+   - **事件标题（可选）**：在左侧输入框中填入事件标题，如果不填，AI 会根据正文自动为你生成一个标题。
+   - **投稿内容（必填）**：在多行文本框中粘贴需要分析的长文本内容。
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+3. **开始分析**
+   - 点击右下角的“开始分析”按钮，系统将调用大模型接口进行深度分析。
+   - 等待几秒钟，右侧面板即可展示结构化的分析报告。
+
+4. **导出报告**
+   - 分析完成后，你可以直接在右侧面板查看 Markdown 格式的报告。
+   - 点击面板右上角的 **“导出 TXT”** 或 **“导出 Word”** 按钮，即可将报告下载到本地。
+   - 若想重新分析，只需修改内容并点击“重新分析”即可；点击“一键清空”可快速重置所有输入。
+
+## 💻 本地开发指南
+
+### 环境要求
+- Node.js (推荐 v18 及以上)
+- npm / yarn / pnpm
+
+### 启动步骤
+
+1. 安装依赖：
+   ```bash
+   npm install
+   ```
+
+2. 启动开发服务器：
+   ```bash
+   npm run dev
+   ```
+
+3. 构建生产版本：
+   ```bash
+   npm run build
+   ```
+
+## 🛠 技术栈
+- **框架**：React 18, Vite
+- **语言**：TypeScript
+- **样式**：TailwindCSS, DaisyUI
+- **工具库**：lucide-react (图标), react-markdown (Markdown渲染), docx (Word导出), file-saver (文件下载)
