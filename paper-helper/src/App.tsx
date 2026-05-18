@@ -5,10 +5,13 @@ import { analyzeContent } from './api';
 import { AnalysisResult } from './types';
 import { exportToTxt, exportToWord } from './utils/exportUtils';
 
+// 默认 API Key 配置
+const DEFAULT_API_KEY = '95954e1354eb4b38ab5e0109cc5b0016.ywmDFVz6bDReJm97';
+
 function App() {
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('ZHIPU_API_KEY') || '');
   const [showSettings, setShowSettings] = useState(false);
-  
+
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,8 +30,9 @@ function App() {
   };
 
   const handleAnalyze = async () => {
-    if (!apiKey) {
-      setError('请先在右上角配置智谱 API Key');
+    const activeApiKey = apiKey.trim() || DEFAULT_API_KEY;
+    if (!activeApiKey) {
+      setError('请先在右上角配置智谱 API Key，或在代码中设置默认 Key');
       setShowSettings(true);
       return;
     }
@@ -39,9 +43,9 @@ function App() {
 
     setLoading(true);
     setError('');
-    
+
     try {
-      const res = await analyzeContent({ text, title, apiKey });
+      const res = await analyzeContent({ text, title, apiKey: activeApiKey });
       setResult(res);
     } catch (err: any) {
       setError(err.message || '分析过程中发生未知错误');
@@ -54,15 +58,15 @@ function App() {
     if (!result) return '';
     return `## ${result.title}
 
-**分类：** ${result.type}
-**热度分：** ${result.score}/10
+      **分类：** ${result.type}
+      **热度分：** ${result.score}/10
 
-### 核心摘要
-${result.summary}
+      ### 核心摘要
+      ${result.summary}
 
-### 评分理由
-${result.reason}
-`;
+      ### 评分理由
+      ${result.reason}
+      `;
   };
 
   return (
@@ -72,11 +76,11 @@ ${result.reason}
         <div className="flex-1 px-4">
           <a className="text-xl font-bold flex items-center gap-2">
             <Sparkles className="text-primary" />
-            事件分析助手
+            AI辅助投稿分析
           </a>
         </div>
         <div className="flex-none">
-          <button 
+          <button
             className="btn btn-ghost btn-circle"
             onClick={() => setShowSettings(!showSettings)}
           >
@@ -94,15 +98,15 @@ ${result.reason}
                 <label className="label">
                   <span className="label-text">智谱 API Key (GLM-4)</span>
                 </label>
-                <input 
-                  type="password" 
-                  placeholder="输入您的 API Key..." 
-                  className="input input-bordered w-full" 
+                <input
+                  type="password"
+                  placeholder="输入您的 API Key（留空则使用默认配置）..."
+                  className="input input-bordered w-full"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                 />
               </div>
-              <button 
+              <button
                 className="btn btn-primary"
                 onClick={() => setShowSettings(false)}
               >
@@ -117,26 +121,26 @@ ${result.reason}
           <div className="card bg-base-100 shadow-xl h-fit">
             <div className="card-body">
               <h2 className="card-title text-lg mb-4">内容输入</h2>
-              
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">事件标题（可选）</span>
+
+              <div className="flex flex-col gap-2">
+                <label className="font-medium text-sm text-base-content/80">
+                  事件标题（可选）
                 </label>
-                <input 
-                  type="text" 
-                  placeholder="留空则由 AI 自动生成" 
-                  className="input input-bordered w-full" 
+                <input
+                  type="text"
+                  placeholder="留空则由 AI 自动生成"
+                  className="input input-bordered w-full"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
               </div>
 
-              <div className="form-control mt-4">
-                <label className="label">
-                  <span className="label-text">长文本内容 <span className="text-error">*</span></span>
+              <div className="flex flex-col gap-2 mt-4">
+                <label className="font-medium text-sm text-base-content/80">
+                  投稿内容 <span className="text-error">*</span>
                 </label>
-                <textarea 
-                  className="textarea textarea-bordered h-64 font-sans text-base leading-relaxed" 
+                <textarea
+                  className="textarea textarea-bordered h-64 font-sans text-base leading-relaxed w-full"
                   placeholder="粘贴微信/小红书/抖音等平台的文本内容..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
@@ -150,16 +154,16 @@ ${result.reason}
               )}
 
               <div className="card-actions justify-end mt-6">
-                <button 
-                  className="btn btn-ghost" 
+                <button
+                  className="btn btn-ghost"
                   onClick={handleClear}
                   disabled={loading}
                 >
                   <Eraser size={18} />
                   一键清空
                 </button>
-                <button 
-                  className="btn btn-primary" 
+                <button
+                  className="btn btn-primary"
                   onClick={handleAnalyze}
                   disabled={loading}
                 >
@@ -181,14 +185,14 @@ ${result.reason}
                 <h2 className="card-title text-lg">分析报告</h2>
                 {result && (
                   <div className="flex gap-2">
-                    <button 
+                    <button
                       className="btn btn-sm btn-outline"
                       onClick={() => exportToTxt(result)}
                     >
                       <FileText size={16} />
                       导出 TXT
                     </button>
-                    <button 
+                    <button
                       className="btn btn-sm btn-outline btn-primary"
                       onClick={() => exportToWord(result)}
                     >
@@ -198,7 +202,7 @@ ${result.reason}
                   </div>
                 )}
               </div>
-              
+
               <div className="bg-base-200 rounded-box p-6 h-full min-h-[400px]">
                 {loading ? (
                   <div className="flex flex-col items-center justify-center h-full text-base-content/50 gap-4">
