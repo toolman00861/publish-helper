@@ -58,15 +58,15 @@ function App() {
     if (!result) return '';
     return `## ${result.title}
 
-      **分类：** ${result.type}
-      **热度分：** ${result.score}/10
+**分类：** ${result.type}
+**热度分：** ${result.score}/10
 
-      ### 核心摘要
-      ${result.summary}
+### 核心摘要
+${result.summary}
 
-      ### 评分理由
-      ${result.reason}
-      `;
+### 评分理由
+${result.reason}
+`;
   };
 
   return (
