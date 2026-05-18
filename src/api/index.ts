@@ -22,7 +22,7 @@ export async function analyzeContent({ text, title, apiKey }: AnalysisRequest): 
       "Authorization": `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: "GLM-4.7",
+      model: "GLM-4.7-FlashX",
       messages: [
         {
           role: "system",
